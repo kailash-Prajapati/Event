@@ -14,6 +14,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/kailash-Prajapati/Event.git'
             }
         }
+    }    
         stage("Build"){
             steps {
                 echo "Building the image"
