@@ -17,7 +17,7 @@ pipeline {
         stage("Build"){
             steps {
                 echo "Building the image"
-                sh "docker build -t Event-app ."
+                sh "docker build -t event-app ."
             }
         }
         // stage("Push to Docker Hub"){
