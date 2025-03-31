@@ -39,7 +39,7 @@ pipeline {
                         sh """
                             docker login -u ${env.docker_user} -p ${env.docker_pass}
                             docker pull ${env.docker_user}/${IMAGE_NAME}:${BUILD_NUMBER}
-                            docker run -dit --name python -p 8000:8000 ${env.docker_user}/${IMAGE_NAME}:${BUILD_NUMBER}
+                            docker run -dit --name python -p 8000:8000 kailashkp/event-app:latest
                         """
                     }
                 }
