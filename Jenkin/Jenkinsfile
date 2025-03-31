@@ -1,47 +1,38 @@
 pipeline { 
-  agent {
-    // using agent manchine call by label  
-    label 'devops' 
-  }
-  options {
-    // Timeout counter starts AFTER agent is allocated
-    timeout(time: 60, unit: 'SECONDS')
-  }
-    stages{
-        stage("Clone Code"){
+    agent { 
+        label 'devops' 
+    }
+    options {
+        timeout(time: 60, unit: 'SECONDS')
+    }
+    stages {
+        stage("Clone Code") {
             steps {
                 echo "Cloning the code"
                 git branch: 'main', url: 'https://github.com/kailash-Prajapati/Event.git'
             }
         }
-    }    
-        stage("Build"){
+        stage("Build") {
             steps {
                 echo "Building the image"
                 sh "docker build -t event-app ."
             }
         }
-        stage("Push to Docker Hub"){
+        stage("Push to Docker Hub") {
             steps {
-                echo "Pushing the image to docker hub"
-                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
-                sh "docker tag event-app ${env.dockerHubUser}/event-app:latest"
-                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                sh "docker push ${env.dockerHubUser}/event-app:latest"
+                echo "Pushing the image to Docker Hub"
+                withCredentials([usernamePassword(credentialsId: "dockerHub", passwordVariable: "dockerHubPass", usernameVariable: "dockerHubUser")]) {
+                    sh "docker tag event-app ${env.dockerHubUser}/event-app:latest"
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                    sh "docker push ${env.dockerHubUser}/event-app:latest"
                 }
             }
         }
-
-        stage("Push to Docker Hub"){
-            steps {
-                echo "Pushing the image to docker hub"
-            } 
-        }
-        stage("Deploy"){
+        stage("Deploy") {
             steps {
                 echo "Deploying the container"
-                
+                sh "docker run -d --name event-app -p 8080:8080 ${env.dockerHubUser}/event-app:latest"
             }
         }
     }
-    
+}
