@@ -31,7 +31,7 @@ pipeline {
         stage("Deploy") {
             steps {
                 echo "Deploying the container"
-                sh "docker run -d --name event-app -p 8080:8080 ${env.dockerHubUser}/event-app:latest"
+            
             }
         }
     }
