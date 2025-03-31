@@ -5,10 +5,6 @@ pipeline {
     options {
         timeout(time: 60, unit: 'SECONDS')
     }
-    environment {
-        IMAGE_NAME = "event-app"
-        DOCKER_REPO = "your-dockerhub-username"  // Replace with your DockerHub username
-    }
     stages {
         stage("Clone Code") {
             steps {
@@ -18,8 +14,8 @@ pipeline {
         }
         stage("Build") {
             steps {
-                echo "Building the Docker image"
-                sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
+                echo "Building the image"
+                sh "docker build -t event-app ."
             }
         }
         stage("Push to Docker Hub") {
@@ -34,15 +30,8 @@ pipeline {
         }
         stage("Deploy") {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: "dockerHub", usernameVariable: "docker_user", passwordVariable: "docker_pass")]) {
-                        sh """
-                            docker login -u ${env.docker_user} -p ${env.docker_pass}
-                            docker pull ${env.docker_user}/${IMAGE_NAME}:${BUILD_NUMBER}
-                            docker run -dit --name python -p 8000:8000 kailashkp/event-app:latest
-                        """
-                    }
-                }
+                echo "Deploying the container"
+                sh "docker run -dit --name python -p 8000:8000 kailashkp/event-app:latest"
             }
         }
     }
