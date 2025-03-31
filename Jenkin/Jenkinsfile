@@ -1,7 +1,7 @@
 pipeline { 
   agent {
     // using agent manchine call by label  
-    label 'phpdev' 
+    label 'devops' 
   }
   options {
     // Timeout counter starts AFTER agent is allocated
